@@ -9,7 +9,7 @@ openshiftScale(namespace: 'development', deploymentConfig: 'flower-app',replicaC
 
 stage 'deployInTesting'
 openshiftTag(namespace: 'development', sourceStream: ‘flower-app',  sourceTag: 'latest', destinationStream: 'flower-app', destinationTag: 'promoteToQA')
-openshiftDeploy(namespace: 'testing', deploymentConfig: 'flower-app', )
+openshiftDeploy(namespace: 'testing', deploymentConfig: 'flower-app')
 openshiftScale(namespace: 'testing', deploymentConfig: ‘flower-app',replicaCount: '3')
 }
 
