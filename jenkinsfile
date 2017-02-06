@@ -7,6 +7,9 @@ stage 'deployInDevelopment'
 openshiftDeploy(namespace: 'development', deploymentConfig: 'flower-app')
 openshiftScale(namespace: 'development', deploymentConfig: 'flower-app',replicaCount: '2')
 
+stage 'test'
+sh 'curl -s  http://flower-app-development.apps.aws.ocp3demo.com'
+
 stage 'deployInTesting'
 openshiftTag(namespace: 'development', sourceStream: 'flower-app',  sourceTag: 'latest', destinationNamespace: 'development',  destinationStream: 'flower-app', destinationTag: 'promoteToQA')
 openshiftDeploy(namespace: 'testing', deploymentConfig: 'flower-app')
