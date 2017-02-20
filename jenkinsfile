@@ -1,4 +1,4 @@
-node('maven') {
+node('pipeline') {
 
 stage 'buildInDevelopment'
 openshiftBuild(namespace: 'development', buildConfig: 'flower-app', showBuildLogs: 'true')
