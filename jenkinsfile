@@ -1,19 +1,19 @@
 node('maven') {
 
 stage 'buildInDevelopment'
-openshiftBuild(namespace: 'development', buildConfig: 'flower-app', showBuildLogs: 'true')
+openshiftBuild(namespace: 'cicd-dev', buildConfig: 'myapp', showBuildLogs: 'true')
 
 stage 'deployInDevelopment'
-openshiftDeploy(namespace: 'development', deploymentConfig: 'flower-app')
-openshiftScale(namespace: 'development', deploymentConfig: 'flower-app',replicaCount: '2')
+openshiftDeploy(namespace: 'cicd-dev', deploymentConfig: 'myapp')
+openshiftScale(namespace: 'cicd-dev', deploymentConfig: 'myapp',replicaCount: '2')
 
 stage 'test'
-sh 'curl -s  http://flower-app-development.apps.aws.ocp3demo.com'
+sh 'curl -s  http://myapp-cicd-dev.192.168.99.101.nip.io'
 
 stage 'deployInTesting'
-openshiftTag(namespace: 'development', sourceStream: 'flower-app',  sourceTag: 'latest', destinationNamespace: 'development',  destinationStream: 'flower-app', destinationTag: 'promoteToQA')
-openshiftDeploy(namespace: 'testing', deploymentConfig: 'flower-app')
-openshiftScale(namespace: 'testing', deploymentConfig: 'flower-app',replicaCount: '3')
+openshiftTag(namespace: 'cicd-dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'cicd-dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
+openshiftDeploy(namespace: 'cicd-test', deploymentConfig: 'myapp')
+openshiftScale(namespace: 'cicd-test', deploymentConfig: 'myapp',replicaCount: '3')
 }
 
 
