@@ -1,19 +1,19 @@
 node('maven') {
 
 stage 'buildInDevelopment'
-openshiftBuild(namespace: 'cicd-dev', buildConfig: 'myapp', showBuildLogs: 'true')
+openshiftBuild(namespace: 'dev', buildConfig: 'myapp', showBuildLogs: 'true')
 
 stage 'deployInDevelopment'
-openshiftDeploy(namespace: 'cicd-dev', deploymentConfig: 'myapp')
-openshiftScale(namespace: 'cicd-dev', deploymentConfig: 'myapp',replicaCount: '2')
+openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
+openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
 
 stage 'test'
-sh 'curl -s  http://myapp-cicd-dev.192.168.99.101.nip.io'
+sh 'curl -s  http://myapp-dev.apps.small.ose3sandbox.com/'
 
 stage 'deployInTesting'
-openshiftTag(namespace: 'cicd-dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'cicd-dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
-openshiftDeploy(namespace: 'cicd-test', deploymentConfig: 'myapp')
-openshiftScale(namespace: 'cicd-test', deploymentConfig: 'myapp',replicaCount: '3')
+openshiftTag(namespace: 'dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
+openshiftDeploy(namespace: 'test', deploymentConfig: 'myapp')
+openshiftScale(namespace: 'test', deploymentConfig: 'myapp',replicaCount: '3')
 }
 
 
