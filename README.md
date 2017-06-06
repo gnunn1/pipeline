@@ -38,12 +38,16 @@ oc new-project test --display-name="ABC Testing"
 
 ##login to OpenShift with admin credentials:
 
+```
 oc login admin
+```
 
 ##When we created the jenkins application, it will create a jenkins service account. We need to grant access to the jenkins service account to the dev and test project
 
+```
 oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev
 oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n test
+```
 
 ##The test project needs to be able to pull images from the development environment
 
