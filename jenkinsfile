@@ -8,7 +8,7 @@ openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
 openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
 
 stage 'test'
-sh 'curl -s http://myapp-dev.apps.ose3sandbox.com/'
+sh 'curl -s http://myapp-dev.apps.ocplab.com/'
 
 stage 'Deploy Live' 
 input 'Promote the Dev image to Live?'
