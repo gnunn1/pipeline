@@ -36,7 +36,7 @@ oc new-project test --display-name="ABC Testing"
 Login to OpenShift with admin credentials:
 
 ```
-oc login admin
+oc login -u admin
 ```
 
 When we created the jenkins application, it will create a jenkins service account. We need to grant access to the jenkins service account to the dev and test project
