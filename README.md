@@ -91,5 +91,5 @@ oc expose svc myapp
 #### Create the pipeline
 
 ```
-oc create pipeline.yaml -n cicd
+oc create -f pipeline.yaml -n cicd
 ```
