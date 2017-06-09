@@ -68,7 +68,7 @@ IMPORTANT - go to the advanced configuration and disabled all builds and deploym
 We also need to create a deployment configuration in the test project for ```myapp```:
 
 ```
-oc create deploymentconfig myapp --image=<<RegistryServiceIP>>:5000/dev/myapp:promoteToQA -n testing
+oc create deploymentconfig myapp --image=<<RegistryServiceIP>>:5000/dev/myapp:promoteToQA -n test
 ```
 
 Note you can get the Registry Service IP and Port by running:
