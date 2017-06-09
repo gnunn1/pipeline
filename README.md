@@ -48,7 +48,9 @@ oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n test
 
 The test project needs to be able to pull images from the development environment
 
+```
 oc policy add-role-to-group system:image-puller system:serviceaccounts:test -n dev
+```
 
 #### Create Application
 
