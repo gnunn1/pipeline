@@ -1,25 +1,32 @@
 node('maven') {
-
-stage 'buildInDevelopment'
-openshiftBuild(namespace: 'dev', buildConfig: 'myapp', showBuildLogs: 'true')
-
-stage 'deployInDevelopment'
-openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
-openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
-
-stage 'test'
-try {
-  sh "curl -s http://myapp-dev.apps.ocplab.com/ | grep '200 OK'"
-  return true
-} catch (Exception e) {
-  return false
+  stage 'buildInDevelopment'
+  openshiftBuild(namespace: 'dev', buildConfig: 'myapp', showBuildLogs: 'true')
 }
 
-stage 'Deploy Live' 
-input 'Promote the Dev image to Live?'
+node {
+  stage 'deployInDevelopment'
+  openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
+  openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
+}
 
-stage 'deployInTesting'
-openshiftTag(namespace: 'dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
-openshiftDeploy(namespace: 'test', deploymentConfig: 'myapp')
-openshiftScale(namespace: 'test', deploymentConfig: 'myapp',replicaCount: '3')
+node {
+  stage 'test'
+  try {
+    sh "curl -s http://myapp-dev.apps.ocplab.com/ | grep '200 OK'"
+    return true
+  } catch (Exception e) {
+    return false
+  }
+}
+
+node {
+  stage 'Deploy Live' 
+  input 'Promote the Dev image to Live?'
+}
+
+node {
+  stage 'deployInTesting'
+  openshiftTag(namespace: 'dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
+  openshiftDeploy(namespace: 'test', deploymentConfig: 'myapp')
+  openshiftScale(namespace: 'test', deploymentConfig: 'myapp',replicaCount: '3')
 }
