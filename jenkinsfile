@@ -9,10 +9,10 @@ openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
 
 stage 'test'
 try {
-  sh 'curl -s http://myapp-dev.apps.ocplab.com/'
-    return true
+  sh "curl -s http://myapp-dev.apps.ocplab.com/ | grep '200 OK'"
+  return true
 } catch (Exception e) {
-    return false
+  return false
 }
 
 stage 'Deploy Live' 
