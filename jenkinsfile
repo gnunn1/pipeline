@@ -8,7 +8,12 @@ openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
 openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
 
 stage 'test'
-sh 'curl -s http://myapp-dev.apps.ocplab.com/'
+try {
+  sh 'curl -s http://myapp-dev.apps.ocplab.com/'
+    return true
+} catch (Exception e) {
+    return false
+}
 
 stage 'Deploy Live' 
 input 'Promote the Dev image to Live?'
@@ -18,5 +23,3 @@ openshiftTag(namespace: 'dev', sourceStream: 'myapp',  sourceTag: 'latest', dest
 openshiftDeploy(namespace: 'test', deploymentConfig: 'myapp')
 openshiftScale(namespace: 'test', deploymentConfig: 'myapp',replicaCount: '3')
 }
-
-
