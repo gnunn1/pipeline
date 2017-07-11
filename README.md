@@ -91,5 +91,5 @@ oc expose svc flower
 #### Create the pipeline
 
 ```
-oc create -f pipeline.yaml -n cicd
+oc create -f https://raw.githubusercontent.com/gnunn1/pipeline/master/pipeline.yaml -n cicd
 ```
