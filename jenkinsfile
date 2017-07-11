@@ -1,18 +1,18 @@
 node('maven') {
   stage 'buildInDevelopment'
-  openshiftBuild(namespace: 'dev', buildConfig: 'myapp', showBuildLogs: 'true')
+  openshiftBuild(namespace: 'dev', buildConfig: 'flower', showBuildLogs: 'true')
 }
 
 node {
   stage 'deployInDevelopment'
-  openshiftDeploy(namespace: 'dev', deploymentConfig: 'myapp')
-  openshiftScale(namespace: 'dev', deploymentConfig: 'myapp',replicaCount: '2')
+  openshiftDeploy(namespace: 'dev', deploymentConfig: 'flower')
+  openshiftScale(namespace: 'dev', deploymentConfig: 'flower',replicaCount: '2')
 }
 
 node {
   stage 'test'
   try {
-    sh "curl -s --head --request GET http://myapp-dev.apps.ocplab.com/ | grep '200 OK'"
+    sh "curl -s --head --request GET http://flower-dev.apps.ocplab.com/ | grep '200 OK'"
     return true
   } catch (Exception e) {
     return false
@@ -26,7 +26,7 @@ node {
 
 node {
   stage 'deployInTesting'
-  openshiftTag(namespace: 'dev', sourceStream: 'myapp',  sourceTag: 'latest', destinationNamespace: 'dev',  destinationStream: 'myapp', destinationTag: 'promoteToQA')
-  openshiftDeploy(namespace: 'test', deploymentConfig: 'myapp')
-  openshiftScale(namespace: 'test', deploymentConfig: 'myapp',replicaCount: '3')
+  openshiftTag(namespace: 'dev', sourceStream: 'flower',  sourceTag: 'latest', destinationNamespace: 'dev',  destinationStream: 'flower', destinationTag: 'promoteToQA')
+  openshiftDeploy(namespace: 'test', deploymentConfig: 'flower')
+  openshiftScale(namespace: 'test', deploymentConfig: 'flower',replicaCount: '3')
 }
