@@ -24,13 +24,13 @@ oc new-app jenkins-persistent
 Create the development environment for the project:
 
 ```
-oc new-project dev --display-name="ABC Development"
+oc new-project dev --display-name="Flower Development"
 ```
 
 Create the testing environment for the project:
 
 ```
-oc new-project test --display-name="ABC Testing"
+oc new-project test --display-name="Flower Testing"
 ```
 
 Login to OpenShift with admin credentials:
@@ -56,7 +56,7 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:test -n d
 
 The pipeline in this project builds and deploys an application called ```myapp```. We need to create the build and deployment config in the development environment that will be called by jenkins
 
-I have used the OpenShift console to create a simple app. In my case, I am using a php app (https://github.com/masauve/bgdemo).  Any app should work.
+I have used the OpenShift console to create a simple app. In my case, I am using a php app (https://github.com/gnunn1/bgdemo).  Any app should work.
 
 In the console, go to the development project - add to project - php (or other), configure the php app (name, git repo). The pipeline is currently configured to work with the name ```myapp```. Feel free to adapt to your needs.
 
