@@ -68,7 +68,7 @@ IMPORTANT - go to the advanced configuration and disabled all builds and deploym
 We also need to create a deployment configuration in the test project for ```myapp```:
 
 ```
-oc create deploymentconfig myapp --image=<<RegistryServiceIP>>:5000/dev/myapp:promoteToQA -n test
+oc create deploymentconfig flower --image=<<RegistryServiceIP>>:5000/dev/myapp:promoteToQA -n test
 ```
 
 Note you can get the Registry Service IP and Port by running:
@@ -84,8 +84,8 @@ IMPORTANT - If you don't update the ```<<RegistryServiceIP>>``` before creating 
 #### Expose myapp in test
 
 ```
-oc expose dc myapp --port=8080
-oc expose svc myapp
+oc expose dc flower --port=8080
+oc expose svc flower
 ```
 
 #### Create the pipeline
