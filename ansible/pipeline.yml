@@ -65,7 +65,6 @@
       tags:
         - openshift
 
-
     - name: Configure test environment
       shell: |
         oc create deploymentconfig flower --image={{ registry_ip.stdout }}:5000/dev/flower:promoteToQA -n test
