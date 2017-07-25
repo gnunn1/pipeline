@@ -6,7 +6,7 @@
   tasks:
 
     - name: Login in OpenShift
-      shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+      shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift_master }}"
       tags:
         - openshift
 
@@ -39,7 +39,7 @@
     # Perform actions that require admin access
     - block:
       - name: Login in OpenShift as admin user
-        shell: "oc login --insecure-skip-tls-verify=true -u {{ admin_username }} -p {{ admin_password }} {{ openshift }}"
+        shell: "oc login --insecure-skip-tls-verify=true -u {{ admin_username }} -p {{ admin_password }} {{ openshift_master }}"
         tags:
           - openshift
 
@@ -53,7 +53,7 @@
         tags: registry_ip
 
       - name: Login in OpenShift
-        shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+        shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift_master }}"
         tags:
           - openshift
 
@@ -84,6 +84,14 @@
       changed_when: "'exists' not in command_result.stderr"
       tags:
         - openshift
+
+    - name: Waiting for jenkins to be ready
+      command: curl -k --head --silent https://jenkins-cicd.{{ openshift_domain }}/login
+      register: result
+      until: result.stdout.find("200 OK") != -1
+      retries: 12
+      delay: 5
+      changed_when: false         
 
     - name: Starting Pipeline
       shell: "oc start-build flowerpipeline -n cicd"

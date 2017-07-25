@@ -2,7 +2,8 @@
 # UNCOMENT define the Absolute path where you want to checkout the source code
 #workdir: "{{ ansible_user_dir }}/summit-game-src"
 # UNCOMENT Define the OpenShift host:port address
-openshift: 192.168.42.45:8443
+openshift_master: 192.168.42.45:8443
+openshift_domain: 192.168.42.45.nip.io
 # Your OpenShift credentials
 username: developer
 password: developer

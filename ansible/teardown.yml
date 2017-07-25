@@ -6,7 +6,7 @@
   tasks:
 
     - name: Login in OpenShift
-      shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+      shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift_master }}"
       tags:
         - openshift
 
