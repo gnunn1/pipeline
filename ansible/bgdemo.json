@@ -80,9 +80,6 @@
                         "name": "${NAME}:latest"
                     }
                 },
-                "postCommit": {
-                    "script": "./lib/Cake/Console/cake test app AllTests"
-                },
                 "source": {
                     "contextDir": "${CONTEXT_DIR}",
                     "git": {
@@ -94,10 +91,6 @@
                 "strategy": {
                     "sourceStrategy": {
                         "env": [
-                            {
-                                "name": "COMPOSER_MIRROR",
-                                "value": "${COMPOSER_MIRROR}"
-                            }
                         ],
                         "from": {
                             "kind": "ImageStreamTag",
