@@ -2,7 +2,7 @@
 
 This is a demo of a very simple pipeline running in OpenShift. Many thanks to my colleague Martin Sauve for creating this example, I've only tweaked it a bit and automated the installation.
 
-This pipeline uses the (bgdemo)[https://github.com/gnunn1/bgdemo] project as the source application.
+This pipeline uses the [bgdemo](https://github.com/gnunn1/bgdemo) project as the source application.
 
 ### Automated Installation
 
