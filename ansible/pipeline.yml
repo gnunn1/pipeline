@@ -47,11 +47,9 @@
 
       - name: Find OpenShift registry IP
         shell: "oc describe svc docker-registry -n default | grep IP: | sed 's/IP:\t\t\t//'"
-        register: registry_ip_output
-        tags: registry_ip
-
-      - name: Set registry_ip fact
-        set_fact: registry_ip=registry_ip_output.stdout_lines
+        register: registry_ip
+        failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+        changed_when: "'exists' not in command_result.stderr"
         tags: registry_ip
 
       - name: Login in OpenShift
@@ -70,7 +68,7 @@
 
     - name: Configure test environment
       shell: |
-        oc create deploymentconfig flower --image={{ registry_ip }}:5000/dev/flower:promoteToQA -n test
+        oc create deploymentconfig flower --image={{ registry_ip.stdout }}:5000/dev/flower:promoteToQA -n test
         oc expose dc flower --port=8080 -n test
         oc expose svc flower -n test
       register: command_result
@@ -86,3 +84,10 @@
       changed_when: "'exists' not in command_result.stderr"
       tags:
         - openshift
+
+    - name: Starting Pipeline
+      shell: "oc start-build flowerpipeline -n cicd"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      tags:
+        - openshift      
