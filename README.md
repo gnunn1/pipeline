@@ -6,7 +6,7 @@ This pipeline uses the [bgdemo](https://github.com/gnunn1/bgdemo) project as the
 
 ### Automated Installation
 
-This demo includes an ansible playbook to automate the installation. Switch to the ```ansible``` folder and update vars.yml to reflect your OpenShift installation. Then simply run the ```pipeline.yml``` playbook:
+This demo includes an ansible playbook to automate the installation. Switch to the ```ansible``` folder and update ```vars.yml``` to reflect your OpenShift installation. Then simply run the ```pipeline.yml``` playbook:
 
 ```ansible-playbook pipeline.yml```
 
