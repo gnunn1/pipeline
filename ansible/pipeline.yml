@@ -1,0 +1,88 @@
+---
+- name: Install Pipeline in OpenShift
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+
+    - name: Login in OpenShift
+      shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+      tags:
+        - openshift
+
+    - name: Create cicd OpenShift project
+      shell: "oc new-project cicd --display-name='CI/CD'"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift
+    
+    - name: Create jenkins app
+      shell: "oc new-app {{ jenkins_template }}"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift
+
+    - name: Create Environments
+      shell: |
+        oc new-project dev --display-name="Flower Development"
+        oc new-project test --display-name="Flower Test"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift
+
+    # Perform actions that require admin access
+    - block:
+      - name: Login in OpenShift as admin user
+        shell: "oc login --insecure-skip-tls-verify=true -u {{ admin_username }} -p {{ admin_password }} {{ openshift }}"
+        tags:
+          - openshift
+
+      - include: permissions.yml
+
+      - name: Find OpenShift registry IP
+        shell: "oc describe svc docker-registry -n default | grep IP: | sed 's/IP:\t\t\t//'"
+        register: registry_ip_output
+        tags: registry_ip
+
+      - name: Set registry_ip fact
+        set_fact: registry_ip=registry_ip_output.stdout_lines
+        tags: registry_ip
+
+      - name: Login in OpenShift
+        shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+        tags:
+          - openshift
+
+    - name: Create application in dev
+      shell: "oc new-app -f bgdemo.json -n dev"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift
+
+
+    - name: Configure test environment
+      shell: |
+        oc create deploymentconfig flower --image={{ registry_ip }}:5000/dev/flower:promoteToQA -n test
+        oc expose dc flower --port=8080 -n test
+        oc expose svc flower -n test
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift
+
+    - name: Create Pipeline
+      shell: "oc create -f https://raw.githubusercontent.com/gnunn1/pipeline/master/pipeline.yaml -n cicd"
+      register: command_result
+      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      changed_when: "'exists' not in command_result.stderr"
+      tags:
+        - openshift

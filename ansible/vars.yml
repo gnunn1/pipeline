@@ -1,0 +1,14 @@
+---
+# UNCOMENT define the Absolute path where you want to checkout the source code
+#workdir: "{{ ansible_user_dir }}/summit-game-src"
+# UNCOMENT Define the OpenShift host:port address
+openshift: 192.168.42.45:8443
+# Your OpenShift credentials
+username: developer
+password: developer
+# OpenShift Administrative credentials
+admin_username: admin
+admin_password: admin
+
+# Jenkins Template, either jenkins-ephemeral or jenkins-persistent
+jenkins_template: jenkins-ephemeral

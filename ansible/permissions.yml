@@ -1,0 +1,24 @@
+---
+- name: Give jenkins SA access to dev
+  shell: "oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Give jenkins SA access to test
+  shell: "oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n test"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Enable test environment to pull images from dev
+  shell: "oc policy add-role-to-group system:image-puller system:serviceaccounts:test -n dev"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
