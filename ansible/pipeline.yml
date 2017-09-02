@@ -67,9 +67,11 @@
 
     - name: Configure test environment
       shell: |
-        oc create deploymentconfig flower --imagePullPolicy=Always --image={{ registry_ip.stdout }}:5000/dev/flower:promoteToQA -n test
+        oc create deploymentconfig flower --image={{ registry_ip.stdout }}:5000/dev/flower:promoteToQA -n test
         oc expose dc flower --port=8080 -n test
         oc expose svc flower -n test
+        oc label svc flower app=flower
+        oc label dc flower app=flower
       register: command_result
       failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
       changed_when: "'exists' not in command_result.stderr"

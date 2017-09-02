@@ -2,26 +2,26 @@
 ########################################
 # Minishift
 ########################################
-openshift_master: 192.168.42.45:8443
-openshift_domain: 192.168.42.45.nip.io
+#openshift_master: 192.168.42.45:8443
+#openshift_domain: 192.168.42.45.nip.io
 # Your OpenShift credentials
-username: developer
-password: developer
+#username: developer
+#password: developer
 # OpenShift Administrative credentials
-admin_username: admin
-admin_password: admin
+#admin_username: admin
+#admin_password: admin
 
 ########################################
 # ocplab.com
 ########################################
-#openshift_master: openshift-master.ocplab.com
-#openshift_domain: apps.ocplab.com
+openshift_master: ocplab.com:8443
+openshift_domain: apps.ocplab.com
 # Your OpenShift credentials
-#username: developer1
-#password: 
+username: developer1
+password: Welcome1
 # OpenShift Administrative credentials
-#admin_username: admin
-#admin_password: 
+admin_username: admin
+admin_password: Welcome1
 
 # Jenkins Template, either jenkins-ephemeral or jenkins-persistent
 jenkins_template: jenkins-ephemeral
