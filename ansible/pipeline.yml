@@ -45,12 +45,12 @@
 
       - include: permissions.yml
 
-      - name: Find OpenShift registry IP
-        shell: "oc describe svc docker-registry -n default | grep IP: | sed 's/IP:\t\t\t//'"
-        register: registry_ip
-        failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-        changed_when: "'exists' not in command_result.stderr"
-        tags: registry_ip
+      # - name: Find OpenShift registry IP
+      #   shell: "oc describe svc docker-registry -n default | grep IP: | sed 's/IP:\t\t\t//'"
+      #   register: registry_ip
+      #   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+      #   changed_when: "'exists' not in command_result.stderr"
+      #   tags: registry_ip
 
       - name: Login in OpenShift
         shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift_master }}"
@@ -67,11 +67,9 @@
 
     - name: Configure test environment
       shell: |
-        oc create deploymentconfig flower --image={{ registry_ip.stdout }}:5000/dev/flower:promoteToQA -n test
+        oc create -f flower-test-deployment.json
         oc expose dc flower --port=8080 -n test
         oc expose svc flower -n test
-        oc label svc flower app=flower
-        oc label dc flower app=flower
       register: command_result
       failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
       changed_when: "'exists' not in command_result.stderr"
@@ -90,13 +88,13 @@
       command: curl -k --head --silent https://jenkins-cicd.{{ openshift_domain }}/login
       register: result
       until: result.stdout.find("200 OK") != -1
-      retries: 12
+      retries: 30
       delay: 5
       changed_when: false
 
     - name: Wait for Jenkins to initialize
       pause:
-        seconds: 10        
+        seconds: 10
 
     - name: Starting Pipeline
       shell: "oc start-build flowerpipeline -n cicd"
