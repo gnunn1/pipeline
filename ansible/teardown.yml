@@ -1,6 +1,6 @@
 ---
 - name: Remove Pipeline from OpenShift
-  hosts: localhost
+  hosts: local
   vars_files:
     - vars.yml
   tasks:

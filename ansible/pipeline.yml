@@ -1,6 +1,6 @@
 ---
 - name: Install Pipeline in OpenShift
-  hosts: localhost
+  hosts: local
   vars_files:
     - vars.yml
   tasks:
@@ -43,7 +43,7 @@
         tags:
           - openshift
 
-      - include: permissions.yml
+      - include_tasks: permissions.yml
 
       # - name: Find OpenShift registry IP
       #   shell: "oc describe svc docker-registry -n default | grep IP: | sed 's/IP:\t\t\t//'"
